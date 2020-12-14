@@ -28,7 +28,9 @@ class Cupcake(db.Model):
     image = db.Column(db.Text,
                       nullable=False,
                       default='https://tinyurl.com/demo-cupcake')
-    
+
+# Make image global constant 
+
     def serialize(self):
         """ Create a serialized dictionary for the instance """
 
@@ -37,6 +39,6 @@ class Cupcake(db.Model):
             "flavor": self.flavor,
             "size": self.size,
             "rating": self.rating,
-            "image": self.image
+            "image": self.image,
         }
     

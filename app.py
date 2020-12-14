@@ -50,12 +50,14 @@ def get_a_cupcake(cupcake_id):
 
 @app.route("/api/cupcakes", methods=["POST"])
 def create_cupcake():
-    """ Create a new cupcake, return JSON with status code 201 """
+    """ Create a new cupcake, return JSON with status code 201 
+        Respond with JSON like: {cupcake: {id, flavor, size, rating, image}}.
+    """
 
-    flavor = request.json.get('flavor')
-    size = request.json.get('size')
-    rating = request.json.get('rating')
-    image = request.json.get('image')
+    flavor = request.json['flavor']
+    size = request.json['size']
+    rating = request.json['rating']
+    image = request.json['image']
 
     new_cupcake = Cupcake(flavor=flavor,
                           size=size,
