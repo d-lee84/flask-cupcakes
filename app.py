@@ -19,6 +19,8 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 toolbar = DebugToolbarExtension(app)
 
+########################################################
+# Homepage Route
 
 @app.route("/")
 def show_homepage():
@@ -26,10 +28,14 @@ def show_homepage():
 
     return render_template('base.html')
 
+########################################################
+# Cupcakes API Routes
 
 @app.route("/api/cupcakes")
 def get_all_cupcakes():
-    """ Get all the data about cupcakes """
+    """ Get all the data about cupcakes 
+    Returns JSON of list of serialized cupcakes like: 
+    {cupcakes: [{id, flavor, size, rating, image}, ...]} """
 
     cupcakes = Cupcake.query.all()
     serialized_list = [cupcake.serialize() for cupcake in cupcakes]
@@ -119,3 +125,19 @@ def delete_cupcake(cupcake_id):
     db.session.commit()
 
     return jsonify(message=message)
+
+
+@app.route("/api/cupcakes/search")
+def search_cupcakes_by_term():
+    """ Gets all cupcakes from database filtered by search term
+    returning JSON of a list of serialized cupcakes like: 
+    {cupcakes: [{id, flavor, size, rating, image}, ...]}  """
+
+    search_term = request.args["search_term"]
+
+    filtered_cupcakes = Cupcake.query.filter(
+        Cupcake.flavor.ilike(f"%{search_term}%")
+    )
+
+    serialized = [cupcake.serialize() for cupcake in filtered_cupcakes]
+    return jsonify(cupcakes=serialized)

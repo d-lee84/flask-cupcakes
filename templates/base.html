@@ -8,10 +8,15 @@
 <body>
     
     <h1>Cupcakes</h1>
-
-    <button id="showCupcakes">Show all cupcakes</button>
+    <!-- <button id="showCupcakes">Show all cupcakes</button> -->
+    <form id="searchCupcakeForm">
+        <label for="searchCupcake">Search Cupcake: </label>
+        <input type="text" id="searchCupcake" placeholder="Cupcake term here!">
+        <button type="submit">Search</button>
+    </form>
 
     <div id="cupcakesList"></div>
+
 
     <form id="addCupcake">
         <label for="cupcakeFlavor">Cupcake Flavor</label>
