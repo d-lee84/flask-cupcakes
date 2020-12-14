@@ -135,7 +135,8 @@ class CupcakeViewsTestCase(TestCase):
             self.assertEqual(Cupcake.query.count(), 2)
 
     def test_update_cupcake_success(self):
-        """ Test updating a cupcake will return serialized Cupcake data and 200 status """
+        """ Test updating a cupcake will return serialized Cupcake data 
+            and 200 status """
 
         with app.test_client() as client:
             url = f"/api/cupcakes/{self.cupcake.id}"
@@ -186,9 +187,9 @@ class CupcakeViewsTestCase(TestCase):
             })
 
     def test_delete_cupcake_failure(self):
-        """ Test deleting an invalid cupcake will return error message 
+        """ Test deleting an invalid cupcake will return error message
         and 404 """
-        
+
         with app.test_client() as client:
             url = "/api/cupcakes/0"
             resp = client.delete(url)

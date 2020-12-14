@@ -1,5 +1,5 @@
 """Flask app for Cupcakes"""
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 
 from flask_debugtoolbar import DebugToolbarExtension
 
@@ -18,6 +18,13 @@ db.create_all()
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 toolbar = DebugToolbarExtension(app)
+
+
+@app.route("/")
+def show_homepage():
+    """ Show the homepage to show and add cupcakes """
+
+    return render_template('base.html')
 
 
 @app.route("/api/cupcakes")
@@ -50,14 +57,14 @@ def get_a_cupcake(cupcake_id):
 
 @app.route("/api/cupcakes", methods=["POST"])
 def create_cupcake():
-    """ Create a new cupcake, return JSON with status code 201 
+    """ Create a new cupcake, return JSON with status code 201
         Respond with JSON like: {cupcake: {id, flavor, size, rating, image}}.
     """
 
     flavor = request.json['flavor']
     size = request.json['size']
     rating = request.json['rating']
-    image = request.json['image']
+    image = request.json['image'] or None
 
     new_cupcake = Cupcake(flavor=flavor,
                           size=size,
@@ -69,10 +76,11 @@ def create_cupcake():
 
     return (jsonify(cupcake=new_cupcake.serialize()), 201)
 
+
 @app.route("/api/cupcakes/<int:cupcake_id>", methods=["PATCH"])
 def update_cupcake(cupcake_id):
-    """ Updates the cupcake from form data and returns it 
-    
+    """ Updates the cupcake from request data and returns it
+
     Returns with JSON like: {cupcake: {id, flavor, size, rating, image}}.
     """
 
@@ -82,7 +90,8 @@ def update_cupcake(cupcake_id):
         message = "Cupcake does not exist"
         return (jsonify(error=message), 404)
 
-    # If we want to update only parts of the data, use .get here or the current value if JSON body has no data
+    # If we want to update only parts of the data,
+    # use .get here or the current value if JSON body has no data
     cupcake.flavor = request.json.get('flavor') or cupcake.flavor
     cupcake.size = request.json.get('size') or cupcake.size
     cupcake.rating = request.json.get('rating') or cupcake.rating
@@ -92,9 +101,11 @@ def update_cupcake(cupcake_id):
 
     return jsonify(cupcake=cupcake.serialize())
 
+
 @app.route("/api/cupcakes/<int:cupcake_id>", methods=["DELETE"])
 def delete_cupcake(cupcake_id):
-    """ Deletes the cupcake at cupcake_id and returns a success message 
+    """ Deletes the cupcake at cupcake_id and returns a success message
+        {message: "Deleted"}
     If cupcake not found, raise a 404 error message
     """
 
@@ -103,9 +114,8 @@ def delete_cupcake(cupcake_id):
 
     if not cupcake:
         return (jsonify(message=message), 404)
-    
+
     db.session.delete(cupcake)
     db.session.commit()
 
     return jsonify(message=message)
-    

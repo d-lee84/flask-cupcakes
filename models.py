@@ -12,6 +12,7 @@ def connect_db(app):
     db.app = app
     db.init_app(app)
 
+
 class Cupcake(db.Model):
     """ Cupcake model """
     __tablename__ = 'cupcakes'
@@ -23,13 +24,13 @@ class Cupcake(db.Model):
                        nullable=False)
     size = db.Column(db.String(50),
                      nullable=False)
-    rating = db.Column(db.Integer, 
+    rating = db.Column(db.Integer,
                        nullable=False)
     image = db.Column(db.Text,
                       nullable=False,
                       default='https://tinyurl.com/demo-cupcake')
 
-# Make image global constant 
+    # Make image global constant
 
     def serialize(self):
         """ Create a serialized dictionary for the instance """
@@ -41,4 +42,3 @@ class Cupcake(db.Model):
             "rating": self.rating,
             "image": self.image,
         }
-    
