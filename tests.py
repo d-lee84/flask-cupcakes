@@ -55,6 +55,8 @@ class CupcakeViewsTestCase(TestCase):
         db.session.rollback()
 
     def test_list_cupcakes(self):
+        """ Test getting all cupcakes returns a list of serialized Cupcakes
+         and 200 status"""
         with app.test_client() as client:
             resp = client.get("/api/cupcakes")
 
@@ -73,7 +75,9 @@ class CupcakeViewsTestCase(TestCase):
                 ]
             })
 
-    def test_get_cupcake(self):
+    def test_get_cupcake_success(self):
+        """ Test getting a cupcake returns the specific serialized Cupcake 
+        and 200 status"""
         with app.test_client() as client:
             url = f"/api/cupcakes/{self.cupcake_id}"
             resp = client.get(url)
@@ -90,7 +94,23 @@ class CupcakeViewsTestCase(TestCase):
                 }
             })
 
+    def test_get_cupcake_failure(self):
+        """ Test getting a cupcake with invalid id returns an error message 
+        and 404"""
+        with app.test_client() as client:
+            url = "/api/cupcakes/0"
+            resp = client.get(url)
+
+            self.assertEqual(resp.status_code, 404)
+            data = resp.json
+            self.assertEqual(data, {
+                "error": "Cupcake does not exist"
+            })
+
     def test_create_cupcake(self):
+        """ Test creating a cupcake adds it to database and returns newly 
+        serialized Cupcake and 201 status """
+
         with app.test_client() as client:
             url = "/api/cupcakes"
             resp = client.post(url, json=CUPCAKE_DATA_2)
@@ -114,7 +134,9 @@ class CupcakeViewsTestCase(TestCase):
 
             self.assertEqual(Cupcake.query.count(), 2)
 
-    def test_update_cupcake(self):
+    def test_update_cupcake_success(self):
+        """ Test updating a cupcake will return serialized Cupcake data and 200 status """
+
         with app.test_client() as client:
             url = f"/api/cupcakes/{self.cupcake.id}"
             resp = client.patch(url, json=CUPCAKE_DATA_1_UPDATE)
@@ -131,4 +153,50 @@ class CupcakeViewsTestCase(TestCase):
                     "rating": 5,
                     "image": "http://test.com/cupcake.jpg"
                 }
+            })
+    
+    def test_update_cupcake_failure(self):
+        """ Test updating an invalid cupcake will return error message 
+        and 404 """
+
+        with app.test_client() as client:
+            url = "/api/cupcakes/0"
+            resp = client.patch(url, json=CUPCAKE_DATA_1_UPDATE)
+
+            self.assertEqual(resp.status_code, 404)
+            data = resp.json
+            self.assertEqual(data, {
+                "error": "Cupcake does not exist"
+            })
+    
+    def test_delete_cupcake_success(self):
+        """ Test deleting a cupcake will return successful delete message 
+        and 200 status """
+
+        with app.test_client() as client:
+            url = f"/api/cupcakes/{self.cupcake.id}"
+            resp = client.delete(url)
+
+            self.assertEqual(resp.status_code, 200)
+
+            data = resp.json
+
+            self.assertEqual(data, {
+                "message": "Deleted"
+            })
+
+    def test_delete_cupcake_failure(self):
+        """ Test deleting an invalid cupcake will return error message 
+        and 404 """
+        
+        with app.test_client() as client:
+            url = "/api/cupcakes/0"
+            resp = client.delete(url)
+
+            self.assertEqual(resp.status_code, 404)
+
+            data = resp.json
+
+            self.assertEqual(data, {
+                "message": "Cupcake does not exist"
             })
