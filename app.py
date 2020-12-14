@@ -69,3 +69,43 @@ def create_cupcake():
 
     return (jsonify(cupcake=new_cupcake.serialize()), 201)
 
+@app.route("/api/cupcakes/<int:cupcake_id>", methods=["PATCH"])
+def update_cupcake(cupcake_id):
+    """ Updates the cupcake from form data and returns it 
+    
+    Returns with JSON like: {cupcake: {id, flavor, size, rating, image}}.
+    """
+
+    cupcake = Cupcake.query.get(cupcake_id)
+
+    if not cupcake:
+        message = "Cupcake does not exist"
+        return (jsonify(error=message), 404)
+
+    # If we want to update only parts of the data, use .get here or the current value if JSON body has no data
+    cupcake.flavor = request.json.get('flavor') or cupcake.flavor
+    cupcake.size = request.json.get('size') or cupcake.size
+    cupcake.rating = request.json.get('rating') or cupcake.rating
+    cupcake.image = request.json.get('image') or cupcake.image
+
+    db.session.commit()
+
+    return jsonify(cupcake=cupcake.serialize())
+
+@app.route("/api/cupcakes/<int:cupcake_id>", methods=["DELETE"])
+def delete_cupcake(cupcake_id):
+    """ Deletes the cupcake at cupcake_id and returns a success message 
+    If cupcake not found, raise a 404 error message
+    """
+
+    cupcake = Cupcake.query.get(cupcake_id)
+    message = "Deleted" if cupcake else "Cupcake does not exist"
+
+    if not cupcake:
+        return (jsonify(message=message), 404)
+    
+    db.session.delete(cupcake)
+    db.session.commit()
+
+    return jsonify(message=message)
+    
