@@ -126,3 +126,6 @@ async function showSearchedCupcakes(evt) {
 $(showCupcakes);
 $('#addCupcake').on("submit", addCupcake);
 $('#searchCupcake').on("input", showSearchedCupcakes);
+
+// TODO: Add event listener for updating cupcakes, making Axios PATCH request etc.
+// If curious: investigate _debounce in lodash, and implementing it ourselves
