@@ -33,6 +33,7 @@
     <hr>
 
     <h2>Add Cupcakes!</h2>
+    <div id="addCupcakeErrors"></div>
 
     <form id="addCupcake">
         {{ form.hidden_tag() }}
@@ -43,10 +44,6 @@
         <p>
             {{ field.label }}
             {{ field }}
-
-            {% for error in field.errors %}
-                {{ error }}
-            {% endfor %}
         </p>
 
         {% endfor %}

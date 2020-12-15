@@ -4,6 +4,7 @@ const CUPCAKES_API_URL = "/api/cupcakes";
 const SEARCHED_CUPCAKES_API_URL = "/api/cupcakes/search";
 
 const $cupcakesList = $("#cupcakesList");
+const $addCupcakeErrors = $("#addCupcakeErrors");
 
 
 
@@ -32,24 +33,36 @@ async function showCupcakes(evt) {
 
 async function addCupcake(evt){
   evt.preventDefault();
-
+  
   let flavor = $("#flavor").val();
   let size = $("#size").val();
   let rating = $("#rating").val();
   let image = $("#image").val();
-
+  
   $(evt.target).trigger("reset");
-
+  $addCupcakeErrors.empty();
+  
+  // debugger;
   const resp = await axios.post(CUPCAKES_API_URL, {
     flavor,
     size,
     rating,
-    image
+    image,
+
   });
 
-  const cupcake = resp.data.cupcake;
+  console.log(resp.data);
 
-  appendCupcakeToDOM(cupcake);
+  if (resp.data.errors) {
+    for (let error of resp.data.errors) {
+      $addCupcakeErrors.append($(`<p>${error}<p>`))
+    }
+  } else {
+    const cupcake = resp.data.cupcake;
+    appendCupcakeToDOM(cupcake);
+  }
+
+
 
 }
 

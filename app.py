@@ -71,21 +71,21 @@ def create_cupcake():
         Respond with JSON like: {cupcake: {id, flavor, size, rating, image}}.
     """
 
-    flavor = request.json['flavor']
-    size = request.json['size']
-    rating = request.json['rating']
-    image = request.json['image'] or None
+    # Remove csrf because we don't have form to submit, we are using Axios to POST data
+    form = AddCupcakeForm(data=request.json, csrf_enabled=False)
 
-    new_cupcake = Cupcake(flavor=flavor,
-                          size=size,
-                          rating=rating,
-                          image=image)
+    if form.validate():
+        form.image.data = form.image.data or None
+        new_cupcake = Cupcake()
+        form.populate_obj(new_cupcake)
 
-    db.session.add(new_cupcake)
-    db.session.commit()
+        db.session.add(new_cupcake)
+        db.session.commit()
 
-    return (jsonify(cupcake=new_cupcake.serialize()), 201)
-
+        return (jsonify(cupcake=new_cupcake.serialize()), 201)
+    else:
+        return (jsonify(errors=[field.errors for field in form if field.widget.input_type != 'hidden']), 200)
+    
 
 @app.route("/api/cupcakes/<int:cupcake_id>", methods=["PATCH"])
 def update_cupcake(cupcake_id):
