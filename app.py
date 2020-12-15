@@ -5,6 +5,8 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 from models import db, connect_db, Cupcake
 
+from forms import AddCupcakeForm
+
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = "secret"
@@ -26,7 +28,9 @@ toolbar = DebugToolbarExtension(app)
 def show_homepage():
     """ Show the homepage to show and add cupcakes """
 
-    return render_template('base.html')
+    form = AddCupcakeForm()
+
+    return render_template('base.html', form=form)
 
 ########################################################
 # Cupcakes API Routes

@@ -33,10 +33,10 @@ async function showCupcakes(evt) {
 async function addCupcake(evt){
   evt.preventDefault();
 
-  let flavor = $("#cupcakeFlavor").val();
-  let size = $("#cupcakeSize").val();
-  let rating = $("#cupcakeRating").val();
-  let image = $("#cupcakeImage").val();
+  let flavor = $("#flavor").val();
+  let size = $("#size").val();
+  let rating = $("#rating").val();
+  let image = $("#image").val();
 
   $(evt.target).trigger("reset");
 
@@ -62,6 +62,22 @@ function appendCupcakeToDOM(cupcake) {
   const cupcakeContent = `<p>
   <img src="${cupcake.image}">
   Flavor: ${cupcake.flavor}, Rating: ${cupcake.rating}
+
+  <form>
+    <label for="cupcake-${cupcake.id}-flavor">Flavor: </label>
+    <input id="cupcake-${cupcake.id}-flavor" required type="text" value="${cupcake.flavor}">
+
+    <label for="cupcake-${cupcake.id}-rating">Rating: </label>
+    <input id="cupcake-${cupcake.id}-rating" required type="number" value="${cupcake.rating}">
+
+    <label for="cupcake-${cupcake.id}-size">Size: </label>
+    <input id="cupcake-${cupcake.id}-size" required type="text" value="${cupcake.size}">
+
+    <label for="cupcake-${cupcake.id}-image">Image URL: </label>
+    <input id="cupcake-${cupcake.id}-image" type="url" value="${cupcake.image}">
+
+    <button type="submit">Edit the cupcake!</button>
+  </form>
   </p>`
 
   $cupcakesList.append(cupcakeContent);
@@ -94,12 +110,6 @@ async function showSearchedCupcakes(evt) {
 }
  
 
-
-
-
-
-
-// $('#showCupcakes').on("click", showCupcakes);
 $(showCupcakes);
 $('#addCupcake').on("submit", addCupcake);
-$('#searchCupcakeForm').on("submit", showSearchedCupcakes);
+$('#searchCupcake').on("input", showSearchedCupcakes);

@@ -8,17 +8,13 @@
 <body>
     
     <h1>Cupcakes</h1>
-    <!-- <button id="showCupcakes">Show all cupcakes</button> -->
-    <form id="searchCupcakeForm">
-        <label for="searchCupcake">Search Cupcake: </label>
-        <input type="text" id="searchCupcake" placeholder="Cupcake term here!">
-        <button type="submit">Search</button>
-    </form>
+    <label for="searchCupcake">Search Cupcake: </label>
+    <input type="text" id="searchCupcake" placeholder="Cupcake term here!">
 
     <div id="cupcakesList"></div>
 
 
-    <form id="addCupcake">
+    <!-- <form id="addCupcake">
         <label for="cupcakeFlavor">Cupcake Flavor</label>
         <input id="cupcakeFlavor" type="text" required placeholder="Give a cupcake flavor">
 
@@ -31,12 +27,36 @@
         <label for="cupcakeImage">Cupcake Image</label>
         <input id="cupcakeImage" type="url" placeholder="Give a URL of the image">
 
+        
+    </form> -->
+
+    <hr>
+
+    <h2>Add Cupcakes!</h2>
+
+    <form id="addCupcake">
+        {{ form.hidden_tag() }}
+
+        {% for field in form 
+            if field.widget.input_type != 'hidden' %}
+        
+        <p>
+            {{ field.label }}
+            {{ field }}
+
+            {% for error in field.errors %}
+                {{ error }}
+            {% endfor %}
+        </p>
+
+        {% endfor %}
+
         <button type="submit">Add a cupcake!</button>
     </form>
 
 
     <script src="https://unpkg.com/axios/dist/axios.js"></script>
     <script src="http://unpkg.com/jquery"></script>
-    <script src="static/cupcakes.js"></script>
+    <script src="static/main.js"></script>
 </body>
 </html>
